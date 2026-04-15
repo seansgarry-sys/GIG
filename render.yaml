@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: scalla-song-requests
+    runtime: python
+    plan: starter
+    region: ohio
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    disk:
+      name: app-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: SITE_TITLE
+        value: Scalla Song Requests
+      - key: PERFORMER_NAME
+        value: Scalla
+      - key: VENMO_URL
+        value: https://account.venmo.com/u/Sean-Garry-4
+      - key: INSTAGRAM_URL
+        value: https://instagram.com/_scalla__
+      - key: BOOKING_EMAIL
+        value: seansgarry@gmail.com
+      - key: BOOKING_SUBJECT
+        value: !!!GIG BOOKING REQUEST!!!
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USE_TLS
+        value: "true"
+      - key: SMTP_USERNAME
+        value: seansgarry@gmail.com
+      - key: SMTP_FROM_EMAIL
+        value: seansgarry@gmail.com
+      - key: DATA_DIR
+        value: /var/data
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true

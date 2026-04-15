@@ -1,0 +1,8 @@
+.env
+.vscode/
+__pycache__/
+*.pyc
+gig_requests.db
+uvicorn*.log
+cloudflared*.log
+*_check.png

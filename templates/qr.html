@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}QR Code | {{ site_title }}{% endblock %}
+
+{% block content %}
+<section class="screen screen-centered">
+    <div class="card qr-card">
+        <p class="eyebrow">Tonight's QR</p>
+        <h1>Scan for requests</h1>
+        <p class="muted">This QR points to your public home page. If you are using a tunnel or hosted URL, update <code>BASE_URL</code> first.</p>
+
+        <div class="qr-frame">
+            <img src="/qr.png" alt="QR code for the public song request page">
+        </div>
+
+        <p class="url-block">{{ public_url }}</p>
+
+        <div class="button-stack">
+            <a class="button button-primary" href="/qr.png" download="tonight-gig-qr.png">Download QR Code</a>
+            <a class="button button-secondary" href="{{ public_url }}" target="_blank" rel="noreferrer">Open Public Page</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

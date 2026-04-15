@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block body_class %}body-home{% endblock %}
+
+{% block title %}{{ performer_name }} | {{ site_title }}{% endblock %}
+
+{% block content %}
+<section class="screen screen-centered hero-screen">
+    <div class="hero-stage">
+        {% if background_urls %}
+        <div
+            class="hero-backdrop"
+            data-slideshow='{{ background_urls | tojson }}'
+            aria-hidden="true"
+        ></div>
+        {% endif %}
+
+        <div class="card hero-card hero-card-centered">
+            <p class="eyebrow">You're now listening to:</p>
+            <h1>{{ performer_name|upper }}</h1>
+            <p class="hero-copy muted">Hope you're having a great time! Tap below to tip me, send a request, or book me for your next event.</p>
+
+            <div class="button-stack home-actions">
+                <a class="button button-primary button-xl" href="{{ venmo_url }}" target="_blank" rel="noreferrer">Tip Me</a>
+                <a class="button button-secondary button-xl" href="/request">Request a Song</a>
+            </div>
+            <div class="book-button-row">
+                <a class="button button-ghost button-xl book-button" href="/book">Book Me</a>
+            </div>
+
+            <p class="priority-line">Thanks for listening.</p>
+
+            <div class="link-row centered">
+                <a class="text-link" href="{{ instagram_url }}" target="_blank" rel="noreferrer">Instagram</a>
+                <a class="text-link" href="/qr">QR Code</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ request.url_for('static', path='background-slideshow.js') }}?v={{ asset_version }}"></script>
+{% endblock %}

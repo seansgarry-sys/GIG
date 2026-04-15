@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Request Sent | {{ site_title }}{% endblock %}
+
+{% block content %}
+<section class="screen screen-centered">
+    <div class="card success-card">
+        <p class="eyebrow">All set</p>
+        <h1>Request sent</h1>
+        <p class="muted">Nice one. If you want to give it a little extra push, you can tip here too.</p>
+
+        <div class="button-stack">
+            <a class="button button-primary button-xl" href="{{ venmo_url }}" target="_blank" rel="noreferrer">Tip Me</a>
+            <a class="button button-secondary button-xl" href="/request">Submit Another</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login | {{ site_title }}{% endblock %}
+
+{% block content %}
+<section class="screen screen-centered admin-login-screen">
+    <div class="card form-card compact-card">
+        <p class="eyebrow">Private</p>
+        <h1>Performer Login</h1>
+        <p class="muted">Use your admin password to open the dashboard.</p>
+
+        {% if error %}
+        <p class="error-banner">{{ error }}</p>
+        {% endif %}
+
+        <form action="/admin/login" method="post" class="form-stack">
+            <label class="field">
+                <span>Password</span>
+                <input type="password" name="password" required autofocus>
+            </label>
+            <button class="button button-primary button-xl" type="submit">Open Dashboard</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

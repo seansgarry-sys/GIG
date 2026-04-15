@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Book {{ performer_name }} | {{ site_title }}{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <div class="panel-header">
+        <a class="text-link" href="/">&larr; Back</a>
+        <p class="muted small-text">{{ performer_name }}</p>
+    </div>
+
+    <div class="card form-card">
+        <p class="eyebrow">Booking</p>
+        <h1>Book me!</h1>
+        <p class="muted">Tell me a bit about the event and I’ll get the details straight to my inbox.</p>
+
+        {% if error %}
+        <p class="error-banner">{{ error }}</p>
+        {% endif %}
+
+        <form
+            id="booking-form"
+            class="form-stack"
+            action="/api/booking/new"
+            method="post"
+        >
+            <label class="field">
+                <span>Your name</span>
+                <input type="text" name="contact_name" maxlength="80" required autocomplete="name" value="{{ form_values.get('contact_name', '') }}">
+            </label>
+
+            <label class="field">
+                <span>Your email</span>
+                <input type="email" name="contact_email" maxlength="120" required autocomplete="email" value="{{ form_values.get('contact_email', '') }}">
+            </label>
+
+            <label class="field">
+                <span>Phone <em>(optional)</em></span>
+                <input type="tel" name="contact_phone" maxlength="40" autocomplete="tel" value="{{ form_values.get('contact_phone', '') }}">
+            </label>
+
+            <label class="field">
+                <span>Event date <em>(optional)</em></span>
+                <input type="date" name="event_date" value="{{ form_values.get('event_date', '') }}">
+            </label>
+
+            <label class="field">
+                <span>Venue / city</span>
+                <input type="text" name="venue_location" maxlength="140" required value="{{ form_values.get('venue_location', '') }}">
+            </label>
+
+            <label class="field">
+                <span>Budget <em>(optional)</em></span>
+                <input type="text" name="budget" maxlength="80" placeholder="Optional" value="{{ form_values.get('budget', '') }}">
+            </label>
+
+            <label class="field">
+                <span>Event details</span>
+                <textarea name="event_details" rows="6" maxlength="1000" required placeholder="Tell me about the event, vibe, timing, and anything helpful.">{{ form_values.get('event_details', '') }}</textarea>
+            </label>
+
+            <button class="button button-primary button-xl" type="submit">Send Booking Request</button>
+        </form>
+
+        <div class="contact-note">
+            <p class="muted small-text">Pop in the basics and I’ll take it from there.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
