@@ -109,8 +109,41 @@ def is_admin(request: Request) -> bool:
     return bool(request.session.get("is_admin"))
 
 
+def fallback_gallery_filenames(limit: int = 6) -> list[str]:
+    candidates: dict[str, Path] = {}
+
+    for directory in (GALLERY_DIR, SOURCE_GALLERY_DIR):
+        if not directory.exists():
+            continue
+
+        for file_path in directory.iterdir():
+            if not file_path.is_file():
+                continue
+            if file_path.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
+                continue
+            candidates[file_path.name] = file_path
+
+    ordered = sorted(
+        candidates.values(),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    return [path.name for path in ordered[:limit]]
+
+
 def public_background_images(limit: int = 6) -> list[dict[str, Any]]:
-    return list_gallery_images(limit=limit)
+    images = list_gallery_images(limit=limit)
+    if images:
+        return images
+
+    return [
+        {
+            "filename": filename,
+            "original_name": filename,
+            "created_at": "",
+        }
+        for filename in fallback_gallery_filenames(limit=limit)
+    ]
 
 
 def background_image_urls(request: Request, limit: int = 6) -> list[str]:
