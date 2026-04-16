@@ -8,7 +8,7 @@ from datetime import datetime
 from email.message import EmailMessage
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote_plus, urlparse
+from urllib.parse import quote, quote_plus, urlparse
 
 import qrcode
 from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile, WebSocket, WebSocketDisconnect, status
@@ -85,7 +85,11 @@ def public_home_url(request: Request | None = None) -> str:
     configured_url = settings.base_url.strip()
 
     if request is not None:
-        request_url = str(request.url_for("home"))
+        forwarded_proto = request.headers.get("x-forwarded-proto", "").strip()
+        forwarded_host = request.headers.get("x-forwarded-host", "").strip()
+        request_scheme = forwarded_proto or request.url.scheme
+        request_host_value = forwarded_host or request.headers.get("host", "") or request.url.netloc
+        request_url = f"{request_scheme}://{request_host_value}/" if request_host_value else str(request.url_for("home"))
         request_host = (request.url.hostname or "").lower()
 
         if configured_url and not is_local_url(configured_url):
@@ -148,7 +152,7 @@ def public_background_images(limit: int = 6) -> list[dict[str, Any]]:
 
 def background_image_urls(request: Request, limit: int = 6) -> list[str]:
     return [
-        str(request.url_for("media", path=f"gallery/{image['filename']}"))
+        f"/media/gallery/{quote(image['filename'])}"
         for image in public_background_images(limit=limit)
     ]
 

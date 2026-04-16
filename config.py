@@ -45,7 +45,7 @@ class Settings:
     site_title: str = os.getenv("SITE_TITLE", "Tonight's Song Requests")
     performer_name: str = os.getenv("PERFORMER_NAME", "Your Performer Name")
     admin_password: str = os.getenv("ADMIN_PASSWORD", "changeme")
-    asset_version: str = os.getenv("ASSET_VERSION", "20260331-polish3")
+    asset_version: str = os.getenv("ASSET_VERSION", "20260416-proxyfix")
     venmo_url: str = os.getenv("VENMO_URL", "https://venmo.com/")
     instagram_url: str = os.getenv("INSTAGRAM_URL", "https://instagram.com/")
     booking_email: str = os.getenv("BOOKING_EMAIL", "seansgarry@gmail.com")

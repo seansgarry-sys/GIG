@@ -149,7 +149,7 @@
             <div class="gallery-grid">
                 {% for image in gallery_images %}
                 <article class="gallery-item">
-                    <img src="{{ request.url_for('media', path='gallery/' ~ image.filename) }}" alt="{{ image.original_name }}">
+                    <img src="/media/gallery/{{ image.filename }}" alt="{{ image.original_name }}">
                     <div class="gallery-item-body">
                         <p class="gallery-title">{{ image.original_name }}</p>
                         <p class="muted small-text">{{ image.created_at|format_datetime }}</p>
@@ -172,5 +172,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ request.url_for('static', path='dashboard.js') }}"></script>
+<script src="/static/dashboard.js?v={{ asset_version }}"></script>
 {% endblock %}
