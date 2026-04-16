@@ -112,6 +112,10 @@ def public_home_url(request: Request | None = None) -> str:
     return "http://127.0.0.1:8000/"
 
 
+def public_path_url(request: Request, path: str) -> str:
+    return f"{public_home_url(request).rstrip('/')}{path}"
+
+
 def is_admin(request: Request) -> bool:
     return bool(request.session.get("is_admin"))
 
@@ -194,10 +198,15 @@ def booking_context(
     error: str | None = None,
     form_values: dict[str, str] | None = None,
 ) -> dict[str, Any]:
+    web3forms_enabled = bool(settings.web3forms_access_key)
     return {
         "request": request,
         "error": error,
         "form_values": form_values or {},
+        "web3forms_enabled": web3forms_enabled,
+        "web3forms_access_key": settings.web3forms_access_key,
+        "booking_form_action": "https://api.web3forms.com/submit" if web3forms_enabled else "/api/booking/new",
+        "booking_success_url": public_path_url(request, "/book/success"),
     }
 
 
@@ -630,13 +639,13 @@ async def admin_reset_requests(request: Request) -> RedirectResponse:
 @app.post("/api/booking/new", response_class=HTMLResponse)
 async def api_new_booking(
     request: Request,
-    contact_name: str = Form(...),
-    contact_email: str = Form(...),
-    contact_phone: str = Form(""),
+    contact_name: str = Form(..., alias="name"),
+    contact_email: str = Form(..., alias="email"),
+    contact_phone: str = Form("", alias="phone"),
     event_date: str = Form(""),
     venue_location: str = Form(...),
     budget: str = Form(""),
-    event_details: str = Form(...),
+    event_details: str = Form(..., alias="message"),
     botcheck: str = Form(""),
 ):
     if botcheck.strip():
@@ -671,6 +680,17 @@ async def api_new_booking(
             request,
             "book.html",
             booking_context(request, error=str(exc), form_values=form_values),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+    except Exception:
+        return templates.TemplateResponse(
+            request,
+            "book.html",
+            booking_context(
+                request,
+                error="That booking request hit a snag. Please try again in a moment.",
+                form_values=form_values,
+            ),
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 

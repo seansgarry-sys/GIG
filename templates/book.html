@@ -21,24 +21,30 @@
         <form
             id="booking-form"
             class="form-stack"
-            action="/api/booking/new"
+            action="{{ booking_form_action }}"
             method="post"
         >
+            {% if web3forms_enabled %}
+            <input type="hidden" name="access_key" value="{{ web3forms_access_key }}">
+            <input type="hidden" name="subject" value="{{ booking_subject }}">
+            <input type="hidden" name="from_name" value="{{ performer_name }} Booking Form">
+            <input type="hidden" name="redirect" value="{{ booking_success_url }}">
+            {% endif %}
             <input type="checkbox" name="botcheck" style="display: none;">
 
             <label class="field">
                 <span>Your name</span>
-                <input type="text" name="contact_name" maxlength="80" required autocomplete="name" value="{{ form_values.get('contact_name', '') }}">
+                <input type="text" name="name" maxlength="80" required autocomplete="name" value="{{ form_values.get('contact_name', form_values.get('name', '')) }}">
             </label>
 
             <label class="field">
                 <span>Your email</span>
-                <input type="email" name="contact_email" maxlength="120" required autocomplete="email" value="{{ form_values.get('contact_email', '') }}">
+                <input type="email" name="email" maxlength="120" required autocomplete="email" value="{{ form_values.get('contact_email', form_values.get('email', '')) }}">
             </label>
 
             <label class="field">
                 <span>Phone <em>(optional)</em></span>
-                <input type="tel" name="contact_phone" maxlength="40" autocomplete="tel" value="{{ form_values.get('contact_phone', '') }}">
+                <input type="tel" name="phone" maxlength="40" autocomplete="tel" value="{{ form_values.get('contact_phone', form_values.get('phone', '')) }}">
             </label>
 
             <label class="field">
@@ -58,7 +64,7 @@
 
             <label class="field">
                 <span>Event details</span>
-                <textarea name="event_details" rows="6" maxlength="1000" required placeholder="Tell me about the event, vibe, timing, and anything helpful.">{{ form_values.get('event_details', '') }}</textarea>
+                <textarea name="message" rows="6" maxlength="1000" required placeholder="Tell me about the event, vibe, timing, and anything helpful.">{{ form_values.get('event_details', form_values.get('message', '')) }}</textarea>
             </label>
 
             <button class="button button-primary button-xl" type="submit">Send Booking Request</button>
