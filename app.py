@@ -121,13 +121,11 @@ def background_image_urls(request: Request, limit: int = 6) -> list[str]:
 
 
 def bootstrap_gallery_images() -> None:
-    if settings.data_dir.resolve() == BASE_DIR.resolve():
-        return
-
     if not SOURCE_GALLERY_DIR.exists():
         return
 
     existing_images = {image["filename"] for image in list_gallery_images(limit=None)}
+    copy_to_data_dir = settings.data_dir.resolve() != BASE_DIR.resolve()
 
     for source_file in SOURCE_GALLERY_DIR.iterdir():
         if not source_file.is_file():
@@ -136,9 +134,10 @@ def bootstrap_gallery_images() -> None:
         if source_file.name in existing_images:
             continue
 
-        destination = GALLERY_DIR / source_file.name
-        if not destination.exists():
-            shutil.copy2(source_file, destination)
+        if copy_to_data_dir:
+            destination = GALLERY_DIR / source_file.name
+            if not destination.exists():
+                shutil.copy2(source_file, destination)
 
         insert_gallery_image(filename=source_file.name, original_name=source_file.name)
         existing_images.add(source_file.name)
