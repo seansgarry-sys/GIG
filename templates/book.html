@@ -24,6 +24,12 @@
             action="{{ booking_form_action }}"
             method="post"
         >
+            {% if formsubmit_enabled %}
+            <input type="hidden" name="_subject" value="{{ booking_subject }}">
+            <input type="hidden" name="_next" value="{{ booking_success_url }}">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" style="display: none;">
+            {% endif %}
             {% if web3forms_enabled %}
             <input type="hidden" name="access_key" value="{{ web3forms_access_key }}">
             <input type="hidden" name="subject" value="{{ booking_subject }}">

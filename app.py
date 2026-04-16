@@ -198,14 +198,25 @@ def booking_context(
     error: str | None = None,
     form_values: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    web3forms_enabled = bool(settings.web3forms_access_key)
+    formsubmit_target = settings.formsubmit_target or settings.booking_email
+    formsubmit_enabled = settings.booking_delivery == "formsubmit" and bool(formsubmit_target)
+    web3forms_enabled = (
+        settings.booking_delivery == "web3forms"
+        and bool(settings.web3forms_access_key)
+    )
+    booking_form_action = "/api/booking/new"
+    if formsubmit_enabled:
+        booking_form_action = f"https://formsubmit.co/{quote(formsubmit_target)}"
+    elif web3forms_enabled:
+        booking_form_action = "https://api.web3forms.com/submit"
     return {
         "request": request,
         "error": error,
         "form_values": form_values or {},
+        "formsubmit_enabled": formsubmit_enabled,
         "web3forms_enabled": web3forms_enabled,
         "web3forms_access_key": settings.web3forms_access_key,
-        "booking_form_action": "https://api.web3forms.com/submit" if web3forms_enabled else "/api/booking/new",
+        "booking_form_action": booking_form_action,
         "booking_success_url": public_path_url(request, "/book/success"),
     }
 

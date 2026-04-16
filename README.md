@@ -33,6 +33,8 @@ Copy `.env.example` to `.env`, then edit these values:
 - `BASE_URL`
 - `BOOKING_EMAIL`
 - `BOOKING_SUBJECT`
+- `BOOKING_DELIVERY`
+- `FORMSUBMIT_TARGET`
 - `WEB3FORMS_ACCESS_KEY`
 - `SMTP_HOST`
 - `SMTP_PORT`
@@ -69,7 +71,11 @@ Copy `.env.example` to `.env`, then edit these values:
 
 4. Edit `.env` with your performer details and links.
 
-Fastest booking setup: add `WEB3FORMS_ACCESS_KEY` to `.env`. That sends booking form submissions to your inbox without using your Gmail SMTP account as the sender.
+Fastest booking setup tonight: leave `BOOKING_DELIVERY=formsubmit`. The booking form will post directly to FormSubmit and send submissions to your inbox without using your Gmail SMTP account as the sender.
+
+If you want to hide the raw destination email from the form action later, set `FORMSUBMIT_TARGET` to the random string FormSubmit emails you after activation.
+
+Web3Forms is still supported with `BOOKING_DELIVERY=web3forms` plus `WEB3FORMS_ACCESS_KEY`, but some hosted free subdomains and TLDs can be blocked by their anti-abuse rules.
 
 If you prefer SMTP instead, add your SMTP credentials to `.env`. For Gmail, use an App Password in `SMTP_PASSWORD`.
 
@@ -94,7 +100,7 @@ If you prefer SMTP instead, add your SMTP credentials to `.env`. For Gmail, use 
 - Dashboard shows all requests in reverse chronological order
 - Status buttons update requests to `New`, `Queued`, `Played`, or `Skipped`
 - When a request changes, connected dashboards auto-refresh
-- Booking form sends directly from the app when either `WEB3FORMS_ACCESS_KEY` or SMTP is configured
+- Booking form can send through FormSubmit, Web3Forms, or SMTP depending on configuration
 - The newest uploaded gig photo becomes the full-screen background behind the home page action card
 
 ## Notes For Tonight
