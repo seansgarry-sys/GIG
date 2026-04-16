@@ -82,7 +82,7 @@ class Settings:
         invalid_values=("you@example.com",),
     )
     booking_subject: str = os.getenv("BOOKING_SUBJECT", "!!!GIG BOOKING REQUEST!!!")
-    web3forms_access_key: str = os.getenv("WEB3FORMS_ACCESS_KEY", "").strip()
+    web3forms_access_key: str = os.getenv("WEB3FORMS_ACCESS_KEY", "8a3c6646-f893-4f8e-95ac-ee2d01bc3b41").strip()
     smtp_host: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port: int = int(os.getenv("SMTP_PORT", "587"))
     smtp_username: str = _env_with_fallback(

@@ -67,7 +67,7 @@
                 <textarea name="message" rows="6" maxlength="1000" required placeholder="Tell me about the event, vibe, timing, and anything helpful.">{{ form_values.get('event_details', form_values.get('message', '')) }}</textarea>
             </label>
 
-            <button class="button button-primary button-xl" type="submit">Send Booking Request</button>
+            <button class="button button-primary button-xl" type="submit" data-submit-label="Send Booking Request">Send Booking Request</button>
         </form>
 
         <div class="contact-note">
@@ -75,4 +75,20 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+    const form = document.getElementById("booking-form");
+    if (!form) return;
+
+    form.addEventListener("submit", () => {
+        const button = form.querySelector('button[type="submit"]');
+        if (!button) return;
+        button.disabled = true;
+        button.textContent = "Sending...";
+    });
+})();
+</script>
 {% endblock %}
