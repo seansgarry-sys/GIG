@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import json
 import shutil
 import smtplib
 import uuid
@@ -8,7 +9,9 @@ from datetime import datetime
 from email.message import EmailMessage
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, quote_plus, urlparse
+from urllib.error import HTTPError, URLError
+from urllib.parse import quote, quote_plus, urlencode, urlparse
+from urllib.request import Request as UrlRequest, urlopen
 
 import qrcode
 from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile, WebSocket, WebSocketDisconnect, status
@@ -235,6 +238,47 @@ def send_booking_email(
     budget: str,
     event_details: str,
 ) -> None:
+    if settings.web3forms_access_key:
+        web3forms_payload = {
+            "access_key": settings.web3forms_access_key,
+            "subject": settings.booking_subject,
+            "from_name": f"{settings.performer_name} Booking Form",
+            "email": contact_email,
+            "replyto": contact_email,
+            "contact_name": contact_name,
+            "contact_phone": contact_phone or "Not provided",
+            "event_date": event_date or "Not provided",
+            "venue_location": venue_location,
+            "budget": budget or "Not provided",
+            "event_details": event_details,
+        }
+        request = UrlRequest(
+            "https://api.web3forms.com/submit",
+            data=urlencode(web3forms_payload).encode("utf-8"),
+            headers={"Accept": "application/json"},
+            method="POST",
+        )
+
+        try:
+            with urlopen(request, timeout=20) as response:
+                response_body = json.loads(response.read().decode("utf-8"))
+        except HTTPError as exc:
+            message = "That booking request did not send cleanly. Please try again in a moment."
+            try:
+                error_body = json.loads(exc.read().decode("utf-8"))
+                message = error_body.get("body", {}).get("message") or error_body.get("message") or message
+            except Exception:
+                pass
+            raise RuntimeError(message) from exc
+        except (URLError, TimeoutError, OSError) as exc:
+            raise RuntimeError("That booking request did not send cleanly. Please try again in a moment.") from exc
+
+        if not response_body.get("success", False):
+            message = response_body.get("body", {}).get("message") or response_body.get("message") or "That booking request did not send cleanly. Please try again in a moment."
+            raise RuntimeError(message)
+
+        return
+
     required_settings = [
         settings.smtp_host,
         settings.smtp_username,
@@ -593,7 +637,11 @@ async def api_new_booking(
     venue_location: str = Form(...),
     budget: str = Form(""),
     event_details: str = Form(...),
+    botcheck: str = Form(""),
 ):
+    if botcheck.strip():
+        return RedirectResponse("/book/success", status_code=status.HTTP_303_SEE_OTHER)
+
     form_values = {
         "contact_name": contact_name.strip(),
         "contact_email": contact_email.strip(),

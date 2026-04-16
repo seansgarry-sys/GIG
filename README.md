@@ -33,6 +33,7 @@ Copy `.env.example` to `.env`, then edit these values:
 - `BASE_URL`
 - `BOOKING_EMAIL`
 - `BOOKING_SUBJECT`
+- `WEB3FORMS_ACCESS_KEY`
 - `SMTP_HOST`
 - `SMTP_PORT`
 - `SMTP_USERNAME`
@@ -68,7 +69,9 @@ Copy `.env.example` to `.env`, then edit these values:
 
 4. Edit `.env` with your performer details and links.
 
-To make the booking form send email directly from the page, add your SMTP credentials to `.env`. For Gmail, use an App Password in `SMTP_PASSWORD`.
+Fastest booking setup: add `WEB3FORMS_ACCESS_KEY` to `.env`. That sends booking form submissions to your inbox without using your Gmail SMTP account as the sender.
+
+If you prefer SMTP instead, add your SMTP credentials to `.env`. For Gmail, use an App Password in `SMTP_PASSWORD`.
 
 5. Run the app with uvicorn:
 
@@ -91,7 +94,7 @@ To make the booking form send email directly from the page, add your SMTP creden
 - Dashboard shows all requests in reverse chronological order
 - Status buttons update requests to `New`, `Queued`, `Played`, or `Skipped`
 - When a request changes, connected dashboards auto-refresh
-- Booking form sends directly from the app when SMTP is configured
+- Booking form sends directly from the app when either `WEB3FORMS_ACCESS_KEY` or SMTP is configured
 - The newest uploaded gig photo becomes the full-screen background behind the home page action card
 
 ## Notes For Tonight

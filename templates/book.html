@@ -24,6 +24,8 @@
             action="/api/booking/new"
             method="post"
         >
+            <input type="checkbox" name="botcheck" style="display: none;">
+
             <label class="field">
                 <span>Your name</span>
                 <input type="text" name="contact_name" maxlength="80" required autocomplete="name" value="{{ form_values.get('contact_name', '') }}">
