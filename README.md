@@ -103,6 +103,27 @@ To make the booking form send email directly from the page, add your SMTP creden
 
 ## Go Live Tonight
 
+### Fastest hosted option if Render is blocked: Railway
+
+This repo now includes [railway.toml](c:/Users/SeanGarry/Python%20Stuff/railway.toml) so Railway can deploy it directly from GitHub.
+
+1. Go to Railway and create a new project from your GitHub repo.
+2. Select this repo and deploy it.
+3. After the service is created, attach a Volume to the service.
+4. Set the volume mount path to `/data`.
+5. In the service Networking settings, click `Generate Domain`.
+6. Set these variables in Railway:
+   - `ADMIN_PASSWORD`
+   - `SMTP_PASSWORD`
+   - `SECRET_KEY`
+7. Open the generated domain and test:
+   - `/`
+   - `/request`
+   - `/admin/login`
+   - `/qr`
+
+Railway automatically provides the app port, and the app will automatically use the attached Railway volume for SQLite data and uploaded photos.
+
 ### Best hosted option: Render
 
 This repo now includes [render.yaml](c:/Users/SeanGarry/Python%20Stuff/render.yaml) and [.python-version](c:/Users/SeanGarry/Python%20Stuff/.python-version) so you can deploy it as a Render web service with a persistent disk for SQLite and photo uploads.

@@ -15,8 +15,12 @@ FILTER_STATUSES = ("All", "New", "Queued", "Played")
 
 def _resolve_data_dir() -> Path:
     configured = os.getenv("DATA_DIR", "").strip()
+    railway_volume = os.getenv("RAILWAY_VOLUME_MOUNT_PATH", "").strip()
     if not configured:
-        return BASE_DIR
+        if railway_volume:
+            configured = railway_volume
+        else:
+            return BASE_DIR
 
     path = Path(configured).expanduser()
     if not path.is_absolute():
